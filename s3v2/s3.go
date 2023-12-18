@@ -395,8 +395,8 @@ func (s *S3File) openRead() error {
 
 	s.lock.Lock()
 	s.readOpened = true
-	if hoo.ContentLength != 0 {
-		s.fileSize = hoo.ContentLength
+	if hoo.ContentLength != nil {
+		s.fileSize = *hoo.ContentLength
 	}
 	s.lock.Unlock()
 

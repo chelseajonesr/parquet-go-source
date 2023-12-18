@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"testing"
 
+	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/aws/aws-sdk-go/aws/request"
 	"github.com/golang/mock/gomock"
@@ -258,7 +259,7 @@ func TestOpen(t *testing.T) {
 	ctx := context.Background()
 	mockClient := mocks.NewMockS3API(ctrl)
 	mockClient.EXPECT().HeadObject(ctx, gomock.Any()).
-		Return(&s3.HeadObjectOutput{ContentLength: fileSize}, nil)
+		Return(&s3.HeadObjectOutput{ContentLength: aws.Int64(fileSize)}, nil)
 	s := &S3File{
 		ctx:        ctx,
 		BucketName: bucket,
@@ -446,7 +447,7 @@ func TestOpenRead(t *testing.T) {
 				t.Errorf("expected key %q but got %q", bucket, *hoi.Key)
 			}
 
-			return &s3.HeadObjectOutput{ContentLength: filesize}, nil
+			return &s3.HeadObjectOutput{ContentLength: aws.Int64(filesize)}, nil
 		})
 
 	s := &S3File{
